@@ -4,6 +4,7 @@
 import sys
 import csv
 
+ 
 
 def writeFile(output,filename):
 	outputfile = open(filename, "w")
@@ -12,7 +13,7 @@ def writeFile(output,filename):
 	outputfile.close()
 
 def clinicColor(fileContent):
-	output1 = ""
+	output1 = "" 
 	filename1 = "dataset1_symptom.txt"
 	for row in fileContent:
 		if row[5] == "F":
@@ -36,7 +37,7 @@ def monthColor(fileContent):
 			output2 += row[0] + "," + "#8F4586"+ "\n"
 		elif row[4] in ["Jul", "Aug", "Sep"]:
 			output2 += row[0] + "," + "#743A3A"+ "\n"
-		elif row in ["Oct", "Nov", "Dec"]:
+		elif row[4] in ["Oct", "Nov", "Dec"]:
 			output2 += row[0] + "," + "#808040"+ "\n"
 		else:
 			output2 += row[0] + "," + "#6C6C6C"+ "\n"
@@ -74,37 +75,48 @@ def provinceColor(fileContent):
 	for  row in fileContent:
 		##Eastern China/ East China/ huadong: shandong, jiangsu, anhui, zhejiang, fujian, shanghai
 		if row[3] in ["SD", "JS", "AH","JX","ZJ","FJ","SH"]:
-			output5 += row[0] +"," + "#EAC100"+ "\n"
+			output5 += row[0] +"," + "#EAC100"+ "\n" ## east china
+		
 		##huanan/ Sourthern China/South China: guangdong, guangxi, hainan
 		elif row[3] in ["GD", "GX", ]:
-			output5 += row[0] +"," + "#8080C0"+ "\n"
+			output5 += row[0] +"," + "#8080C0"+ "\n" ## sourthern china
+		
 		##huazhong/ Central China/ Center China:hubei, hunan, henan
 		elif row[3] in ["HuB", "HeN"]:
-			output5 += row[0] +"," + "#FF9224"+ "\n"
+			output5 += row[0] +"," + "#FF9224"+ "\n" ## central china
+		
 		##huabei/ North China:beijing, tianjing, hebei, shanxi,neimenggu
 		elif row[3] in ["BJ", "", "JS","AH"]:
-			output5 += row[0] +"," + "#73BF00"+ "\n"
+			output5 += row[0] +"," + "#73BF00"+ "\n"  # notrh china
+		
 		##xibei/ NorthWest China/ Northwesterner: ningxia, xinjiang, qinghai, shan'anxi,gansu
 		elif row[3] in ["SAX", "GS"]:
-			output5 += row[0] +"," + "#FFE153"+ "\n"
+			output5 += row[0] +"," + "#FFE153"+ "\n"  #northwest
+		
 		## Southwest China/ xinan: sochuan, yunnan, guizhou, xizang, chongqing
 		elif row[3] in ["CQ"]:
-			output5 += row[0] +"," + "#CCFF80"+ "\n"
+			output5 += row[0] +"," + "#CCFF80"+ "\n"  # sourthwest
+		
 		## Northwest China/ dongbei:liaoning, jilin, heilongjiang
-		elif row[3] in ["LN", ""]:
-			output5 += row[0] +"," + "#FF79BC"+ "\n"
+		elif row[3] in ["LN" ]:
+			output5 += row[0] +"," + "#FF79BC"+ "\n"  #northwest
+		
 		else:
-			output5 += row[0] + "," + "#6C6C6C"+ "\n"
+			output5 += row[0] + "," + "#6C6C6C"+ "\n"  ##ns
 
-	writeFile(output5,filename5)
+	# writeFile(output5,filename5)
+	outputfile = open(filename5, "w")
+	outputfile.write(output5)
+
+	outputfile.close()
 
 def mainblock():
 	fileContent = csv.reader(open(sys.argv[1], "r"), delimiter = "\t")
 	
-	clinicColor(fileContent)
-	monthColor(fileContent)
-	yearColor(fileContent)
-	originismColor(fileContent)
+	#clinicColor(fileContent)
+	#monthColor(fileContent)
+	#yearColor(fileContent)
+	#originismColor(fileContent)
 	provinceColor(fileContent)
 
 if len(sys.argv) < 2:

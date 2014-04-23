@@ -1,9 +1,10 @@
-#计算一个序列数据集（fasta格式）中每条序列的GC含量，输出格式“序列ID，GC含量”的csv格式文件
+#count GC of every sequence from dataset(fasta format)
+#output format: "seqeunce_Id,GCcount" in csv format
 #2013-12-19
 
 from Bio.Seq import Seq
-from Bio.Seq import GC
-from Bio.Seq import SeqIO
+from Bio.SeqUtils import GC
+from Bio import SeqIO
 import sys
 
 infilename=sys.argv[1]
@@ -11,7 +12,7 @@ output=""
 seqfile = open(infilename,"rU")
 for seqRecord in SeqIO.parse(seqfile,"fasta"):
 	GCcount=GC(seqRecord.seq)
-	output += seqRecord.id + "," + GCcount + "\t"
+	output += seqRecord.id + "," + str(GCcount) + "\n"
 
 
 outfile = open("result-GCcount.csv","w")

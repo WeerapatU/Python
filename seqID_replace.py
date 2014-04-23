@@ -7,7 +7,8 @@ import csv
 import re
 
 if len(sys.argv) <4:
-	print "USAGE: python seqID_replace.py "
+	print "ERROR!"
+	print "USAGE: python seqID_replace.py source_file "
 	sys.exit(2)
 else:
 	input_file = sys.argv[1]
