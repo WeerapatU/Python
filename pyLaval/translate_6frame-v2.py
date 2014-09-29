@@ -11,8 +11,6 @@ import re
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
-
-
 def six_Frame_Translation(sequence_string, seq_info, genetic_code_type):
 	tmp_info = ""
 	for strand, nucleotides in [(+1, sequence_string), (-1, sequence_string.reverse_complement())]:
@@ -32,24 +30,13 @@ def six_Frame_Translation(sequence_string, seq_info, genetic_code_type):
 				#if len(pro) >= min_pro_len: 
 					tmp_info += "\n" + seq_info+ "," + str(strand) + "," + str(frame) + "," + str(len(pro)) +"," + "start not yet" + "," + "end not yet" +"," + pro
 
-			
-                
-				# tmp_info = strand + "," + frame+ "," + len(pro) +"," + "start not yet" + "," \
-				# "end mot yet" +"," + pro
 			return tmp_info
-
-
-
 
 ##main program
 in_file = sys.argv[1]
 fasta_file = open(in_file)
 
-frame_csv = ""
 frame_csv = "Accession,chrosome,strand,frame,length,start_position,end_position,translation"
-
-# seqeuence_file = SeqIO.read(fasta_file,"fasta")
-# sequence_count = len(seqeuence_file)
 
 for seqrecord in SeqIO.parse(fasta_file, "fasta"):
 	id_pattern = re.compile(r'mit')
@@ -68,13 +55,7 @@ for seqrecord in SeqIO.parse(fasta_file, "fasta"):
 		frame_csv +=  six_Frame_Translation(sequence_string, id_info, genetic_code_type)
 	
 
-
-
-	##print six_frame_translations(seqrecord.seq)
-#print six_frame
-# for item in six_frame:
-# 	print item
-output = open("six grame.csv","w")
+output = open("six_grame-2.csv","w")
 output.write(str(frame_csv))
 
 fasta_file.close()
