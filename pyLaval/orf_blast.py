@@ -32,6 +32,6 @@ in_database_file = sys.argv[2]
 csv_content = csv.reader(csv_file, delimiter=",")
 
 for row in csv_content:
-	equery_seq = row[6]
-	
+	query_seq = row[6]
+	blast_commandline = NcbiblastxCommandline(query= query_seq, db="nr", evalue=0.001,outfmt=5, out="opuntia.xml")
 
