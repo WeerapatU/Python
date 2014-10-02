@@ -4,28 +4,12 @@ from Bio.Blast import NCBIWWW
 from Bio.Blast import  NCBIXML
 from Bio import SeqIO
 from Bio.Seq import Seq
-from Bio.Blast.Applications import NcbiblastxCommandline
+from Bio.Blast.Applications import NcbiblastnCommandline
 import csv
 import sys
 import os
 from Bio.Alphabet import generic_dna
-
-tmp_dna = "ATGGCCCATCTCTCACTGAATCAGTACCAAATGCACTCACATCATTATGCACGGCACTTGCCTCAGCGGTCTATACCCTGTGCCATTTACCCA"
-tmp_aa = "MAHLSLNQYQMHSHHYARHLPQRSIPCAIYP"
-
-# result = NCBIWWW.qblast("blastn", "nr", tmp_dna)
-# blast_records = NCBIXML.parse(result)
-# for record in blast_records:
-# 	for alignment in record.alignments:
-# 		for hsp in alignment.hsps:
-# 			print hsp.expect
-# 			print alignment.title
-# 			print alignment.length
-# 			# print hsp.query
-# 			# print hsp.match
-# 			# print hsp.sbjct
-
-# # print blast_records
+from  lxml import etree 
 
 #usage: python $0 csv_file_with_orf_and_translation database_file
 
@@ -38,22 +22,49 @@ in_database_file = sys.argv[2]
 
 csv_content = csv.reader(csv_file, delimiter=",")
 
+new_row = ""
 #os.sysyem('formatdb -i orf_coding.fasta -p F -a F -o T ')
+
+def write_file(blastout):
+	file_name = "./tmp_result/tmp_blast.xml"
+	out_put = open(file_name, "w")
+	out_put.write(blastout)
+	out_put.close()
+	return file_name
+
+def list2string(thelist):
+	tmp_string = ""
+	for item in thelist:
+		tmp_string += item +","
+	return tmp_string
 
 for row in csv_content:
 	query_seq = row[6]
 	tmp_seq = Seq(query_seq, generic_dna)
-	blast_commandline = NcbiblastxCommandline(query= query_seq, db="orf_coding", evalue=0.001, outfmt=5, out="./tmp_result/blast_out.xml")
-	os.system(str(blast_commandline))
+	blast_commandline = NcbiblastnCommandline( db="orf_coding.fasta", evalue=0.001, outfmt=5, )
+	blast_out,err = blast_commandline(query_seq)
+	
+	file_name = write_file(blast_out)
 
-	# xml_file = open("/tmp_result/blast_out.xml")
-	# blast_records = NCBIXML.parse(xml_file)
-	# for record in blast_records:
-	# 	for hsp in record.alignments:
-	# 		print hso.expect
+	blast_all_records = NCBIXML.parse(open(file_name,"r"))
+	index = 0
 
-	# xml_file.close()
+	for record in blast_all_records:
+		new_row += list2string(row)
+		for alignment in record.alignments:
+			index += 1
+			for hsp in record.alignments:
+				new_row += ("," + (hsp.title).replace(",", "."))
+			if index == 3: break # get top 3 hit in blast result
+		new_row += ("\n")
+	#xml_file.close()
+
+out_file_name = "./tmp_result/blast_filter_result.csv"
+out_file_filter = open(out_file_name,"w")
+out_file_filter.write(str(new_row))
+out_file_filter.close()
 
 
 csv_file.close()
+
 
