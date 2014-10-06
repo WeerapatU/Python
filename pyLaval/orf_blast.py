@@ -4,7 +4,7 @@ from Bio.Blast import NCBIWWW
 from Bio.Blast import  NCBIXML
 from Bio import SeqIO
 from Bio.Seq import Seq
-from Bio.Blast.Applications import NcbiblastnCommandline
+from Bio.Blast.Applications import NcbiblastxCommandline
 import csv
 import sys
 import os
@@ -13,7 +13,7 @@ from  lxml import etree
 
 #usage: python $0 csv_file_with_orf_and_translation database_file
 
-os.chdir("/home/joey/research/s.cere/blast-20140930")
+#os.chdir("/home/joey/research/s.cere/blast-20140930")
 
 in_csv_file = sys.argv[1]
 csv_file = open(in_csv_file,"r")
@@ -26,7 +26,7 @@ new_row = ""
 #os.sysyem('formatdb -i orf_coding.fasta -p F -a F -o T ')
 
 def write_file(blastout):
-	file_name = "./tmp_result/tmp_blast.xml"
+	file_name = "./result/tmp_blast.xml"
 	out_put = open(file_name, "w")
 	out_put.write(blastout)
 	out_put.close()
@@ -41,7 +41,7 @@ def list2string(thelist):
 for row in csv_content:
 	query_seq = row[6]
 	tmp_seq = Seq(query_seq, generic_dna)
-	blast_commandline = NcbiblastnCommandline( db="orf_coding.fasta", evalue=0.001, outfmt=5, )
+	blast_commandline = NcbiblastxCommandline( db="orf_trans_all.fasta ", evalue=0.001, outfmt=5, )
 	blast_out,err = blast_commandline(query_seq)
 	
 	file_name = write_file(blast_out)
@@ -59,7 +59,7 @@ for row in csv_content:
 		new_row += ("\n")
 	#xml_file.close()
 
-out_file_name = "./tmp_result/blast_filter_result.csv"
+out_file_name = "./result/blast_filter_result.csv"
 out_file_filter = open(out_file_name,"w")
 out_file_filter.write(str(new_row))
 out_file_filter.close()
