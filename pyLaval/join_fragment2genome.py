@@ -38,7 +38,7 @@ for item in sorted(num_id_direct):
 #SeqIO.write(SeqRecord(whole_genome, id = spice_name, description = ""), out_file_name,"fasta")
 
 out_file = open(out_file_name,"w")
-out_file.write(str(">" + spice_name + "\n" + whole_genome))
+out_file.write(str(">" + spice_name + "\n" + whole_genome+"\n"))
 
 out_file.close()
 in_file.close()
