@@ -18,7 +18,7 @@ def list2string(thelist):
 	return tmp_string
 
 for row in csv.reader(in_file,delimiter=","):
-	if len(row) == 10:
+	if len(row) == 12:
 		new_row += list2string(row) + "\n"
 
 output = open(out_file_name,"w")

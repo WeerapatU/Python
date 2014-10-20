@@ -51,7 +51,9 @@ def findOrfs(sequence,seq_len, tmp_end_codons, seq_info):
 
 ################### main program ####
 in_file = sys.argv[1]
-out_file = sys.argv[2]
+# out_file = sys.argv[2]
+
+out_file = (in_file.split(".")[2]).split("/")[-1] + "_orfs.csv"
 
 #Standard genetic code
 start_codon = ["ATG"]
@@ -61,15 +63,15 @@ end_codons = ["TGA", "TAA", "TAG"]
 end_Mit_codons = ["TAA", "TAG"]
 
 minimum_threshold = 90
-maximum_threshold = 300
+maximum_threshold = 600
 
 fasta_file = open(in_file)
 
 all_orfs = ""
 
 for seqrecord in SeqIO.parse(fasta_file,"fasta"):
-	seqrecord_accession = seqrecord.id.split("-")[0]
-	seqrecord_chrosome = seqrecord.id.split("-")[1] + " " + seqrecord.id.split("-")[2]
+	seqrecord_accession = seqrecord.id.split("_")[0]
+	seqrecord_chrosome = seqrecord.id.split("_")[1] + " " + seqrecord.id.split("_")[2]
 	seqrecord_seq = str(seqrecord.seq).upper()
 	reverse_seqcord_seq = str(seqrecord.seq.reverse_complement()).upper()
 	seq_len = len(seqrecord_seq)
@@ -85,7 +87,7 @@ for seqrecord in SeqIO.parse(fasta_file,"fasta"):
 		all_orfs +=  findOrfs(seqrecord_seq, seq_len, end_Mit_codons, (seqrecord_info+","+"+1")) #
 		all_orfs +=  findOrfs(reverse_seqcord_seq, seq_len, end_Mit_codons, (seqrecord_info+","+"-1"))
 	else:
-		## nucul genome
+		## nuclear genome
 		all_orfs +=  findOrfs(seqrecord_seq, seq_len, end_codons, (seqrecord_info+","+"+1") ) 
 		all_orfs +=  findOrfs(seqrecord_seq, seq_len, end_codons, (seqrecord_info+","+"-1"))
 
