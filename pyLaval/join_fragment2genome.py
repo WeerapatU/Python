@@ -10,8 +10,8 @@ in_file_name = sys.argv[1]
 
 spice_name = (in_file_name.split("_")[0]).split("/")[-1]
 
-out_file_name = "./fragment2genome/" + str(spice_name) + ".genome.fasta"
-
+# out_file_name = "./fragment2genome/" + str(spice_name) + ".genome.fasta"
+out_file_name =  str(spice_name) + ".genome.fasta"
 
 in_file = open(in_file_name,"r")
 
@@ -22,7 +22,9 @@ num_id_direct = {}
 whole_genome = ""
 
 for record in SeqIO.parse(in_file,"fasta"):
-	index = record.id.split("_")[2]
+	index = record.id.split("_")[1]
+	if "|" in index:
+		index = index.split("|")[0]
 	num_id_direct[int(index)] = record.id 
 	id_seq_direct[record.id] = record.seq 
 
