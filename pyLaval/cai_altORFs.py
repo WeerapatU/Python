@@ -51,25 +51,30 @@ def calcul_cai(sequence_string):
 	return cai_value
 
 def get_sequence_from_csv(infilename):
+	new_file_content = ""
 	csv_file = open(infilename,"r")
 	for row in csv.reader(csv_file):
-		print calcul_cai(row[6])
+		cai_row = calcul_cai(row[6])
+		if row[2] != "-1":
+			new_file_content += row[5] + "," + str(cai_row) + "\n"
 	
 	csv_file.close()
+	return new_file_content
 
 def write_out(filename, filecontent):
 	output = open(filename, "w")
 	output.write(filecontent)
 	output.close()
 
+### main program ### 
 infilename = sys.argv[1]
 outfile = infilename.split(".")[0]
 if "/" in outfile:
 	outfile = outfile.split("/")[-1]
 outfile_name = "cai_" + outfile + ".csv"
 
-get_sequence_from_csv(infilename)
-
+filecontent = get_sequence_from_csv(infilename)
+write_out(outfile_name, filecontent)
 
 # print cai_value
 # cai_index = SharpEcoliIndex
