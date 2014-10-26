@@ -1,0 +1,1 @@
+mauveAligner --weight=300 --output=5_yeast_genomes.mauve --output-alignment=5_yeast_genomes.alignment 5yeast_genomes.fasta
