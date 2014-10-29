@@ -53,6 +53,23 @@ def calcul_cai(sequence_string):
 	cai_value = math.exp(cai_sum / (cai_length - 1.0))
 	return cai_value
 
+##calculate cai in sequence string, return cai value
+## SPECIAL FOR RNA-SEQ DATA!
+##TODO
+def calcul_caiRibo(sequence_string):
+	cai_sum, cai_length = 0,0
+	for i in range(0, len(sequence_string),3):
+		codon = sequence_string[i:i+3]
+		if codon in SharpEcoliIndex:
+			if codon not in ['ATG', 'TGG']:
+				cai_sum += math.log(SharpEcoliIndex[codon])
+				cai_length += 1
+		elif codon not in ['TGA', 'TAA', 'TAG']:
+			raise TypeError("illegal codon in sequences")
+
+	cai_value = math.exp(cai_sum / (cai_length - 1.0))
+	return cai_value
+
 #get sequence string from a csv file, ans then call calcul_cai to calculate cai
 #   return sequence lenght and cai value
 def get_sequence_from_csv(infilename):
@@ -104,6 +121,20 @@ def get_sequence_chromosome(infilename):
 
 	csv_file.close()
 
+## use this to calculation CAI in tophat accepted hits. 
+def calculate_caiRibo(infilename):
+	new_content = ""
+	# open file 
+	csv_file = open(infilename, "r")
+	# read file as csv file
+	for row in csv.reader(csv_file, delimiter="\t"):
+		#calculation cai
+		cai_row = calcul_cai(str(row[3]))
+		new_content += row[0] + "\t" + row[1] +"\t" +row[2] +"\t"+str(cai_row) +"\t"+row[3] +"\n"
+
+	write_out(outfile_name, new_content)
+	csv_file.close()
+
 #write file out
 def write_out(filename, filecontent):
 	output = open(filename, "w")
@@ -117,9 +148,15 @@ if "/" in outfile:
 	outfile = outfile.split("/")[-1]
 outfile_name = "cai_" + outfile + ".csv"
 
+##calculate CAI in whole genome
 #filecontent = get_sequence_from_csv(infilename)
 #write_out(outfile_name, filecontent)
 
-os.system("mkdir -p " + outfile)
+##calculate CAI in every chromosome
+#os.system("mkdir -p " + outfile)
+#get_sequence_chromosome(infilename)
 
-get_sequence_chromosome(infilename)
+##calculate CAI in ribosome data and RNA-Seq data
+##    tophat accepted hits
+calculate_caiRibo(infilename)
+
