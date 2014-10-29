@@ -1,4 +1,4 @@
-#!/usr/python
+#!/user/bin/python
 
 ## this is use to blast two protein sequence.
 

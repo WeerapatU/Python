@@ -1,3 +1,4 @@
+#!/user/bin/python
 #join chrosome fragment into whole genome, for genome comparison.
 #2014-10-06
 

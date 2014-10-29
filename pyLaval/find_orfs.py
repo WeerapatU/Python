@@ -1,4 +1,4 @@
-#!/bin/python
+#!/user/bin/python
 
 ## this is to get all orf(30-200 aa) from genome, both starnd(+1, -1).
 #Bug report to joey0576@163.com

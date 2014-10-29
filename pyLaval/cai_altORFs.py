@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+#!/usr/bin/python
+
 #calculate cai in altORFs
 
 import sys

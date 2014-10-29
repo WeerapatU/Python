@@ -1,4 +1,4 @@
-#!/bin/python/
+#!/user/bin/python/
 
 ## description: map orf to S.cerevisiae S288c reference genome.
 ##todo: to simplify the code

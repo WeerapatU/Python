@@ -1,4 +1,4 @@
-#!/bin/python
+#!/user/bin/python
 
 ##this is to make fasta sequence from csv file generated six frame orfs.
 
