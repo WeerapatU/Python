@@ -15,13 +15,15 @@ def get_uniq(csv_content):
 		else:
 			for item in uniq_list:
 				for i in range(0, len(row)):
-					if str(row[i]) != str(item[i]):
-						print row[i] +" ---- " + item[i]
+					if str(row[i]) == str(item[i]):
+						#print row[i] +" ---- " + item[i]
+						same_read = True
+					else:
 						same_read = False
 
-			if same_read == False:
-				#print same_read
-				uniq_list.append(row)
+		if same_read == False:
+			#print same_read
+			uniq_list.append(row)
 		same_read = True
 
 	write_out(list2string(uniq_list), outfile_name)
