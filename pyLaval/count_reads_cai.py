@@ -16,13 +16,11 @@ def get_uniq(csv_content):
 			for item in uniq_list:
 				for i in range(0, len(row)):
 					if str(row[i]) == str(item[i]):
-						#print row[i] +" ---- " + item[i]
 						same_read = True
 					else:
 						same_read = False
 
 		if same_read == False:
-			#print same_read
 			uniq_list.append(row)
 		same_read = True
 
