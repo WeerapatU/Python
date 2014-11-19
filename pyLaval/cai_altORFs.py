@@ -198,5 +198,7 @@ outfile_name = "cai_" + outfile + ".csv"
 
 ##calculate CAI in ribosome data and RNA-Seq data
 ##    tophat accepted hits
-calculate_caiRibo(infilename)
+#calculate_caiRibo(infilename)
 
+##calculate cai from mapped .sam file
+calculate_inSAM(infilename)
