@@ -10,7 +10,7 @@ from Bio.SeqUtils import CodonUsage
 import math
 import os
 
-#codon index
+#codon index for E.Coli
 SharpEcoliIndex = {
                     'GCA': 0.586, 'GCC': 0.122, 'GCG': 0.424, 
                     'GCT': 1,     'AGA': 0.004, 'AGG': 0.002, 
@@ -34,6 +34,30 @@ SharpEcoliIndex = {
 					'GTA': 0.495, 'GTC': 0.066, 'GTG': 0.221, 
 					'GTT': 1} 
 
+#codon index for Yeast
+SharpYeastIndex = {
+                    'GCA': 0.015, 'GCC': 0.316, 'GCG': 0.001, 
+                    'GCT': 1,     'AGA': 1, 	'AGG': 0.003, 
+                    'CGA': 0.002, 'CGC': 0.002, 'CGG': 0.002, 
+                    'CGT': 0.137, 'AAC': 1,     'AAT': 0.053, 
+                    'GAC': 1,     'GAT': 0.554, 'TGC': 0.077, 
+ 					'TGT': 1,	  'CAA': 1,		'CAG': 0.007, 
+ 					'GAA': 1,     'GAG': 0.016, 'GGA': 0.002, 
+ 					'GGC': 0.020, 'GGG': 0.004, 'GGT': 1, 
+ 					'CAC': 1,     'CAT': 0.245, 'ATA': 0.003, 
+ 					'ATC': 1,     'ATT': 0.823, 'CTA': 0.039, 
+ 					'CTC': 0.003, 'CTG': 0.003, 'CTT': 0.006, 
+ 					'TTA': 0.117, 'TTG': 1,  	'AAA': 0.135, 
+ 					'AAG': 1,	  'ATG': 1,     'TTC': 1, 
+ 					'TTT': 0.113, 'CCA': 1,     'CCC': 0.009, 
+ 					'CCG': 0.002, 'CCT': 0.047, 'AGC': 0.031, 
+ 					'AGT': 0.021, 'TCA': 0.036, 'TCC': 0.693, 
+					'TCG': 0.005, 'TCT': 1,     'ACA': 0.012, 
+					'ACC': 1,     'ACG': 0.006, 'ACT': 0.921, 
+					'TGG': 1,     'TAC': 1,     'TAT': 0.071, 
+					'GTA': 0.002, 'GTC': 0.831, 'GTG': 0.018, 
+					'GTT': 1} 
+
 #test sequence string
 sequence_string = "ATCGTATAGAATTCACCGGCT"
 sequence_string = sequence_string.upper()
@@ -45,9 +69,9 @@ def calcul_cai(sequence_string):
 	cai_sum, cai_length = 0,0
 	for i in range(0, len(sequence_string),3):
 		codon = sequence_string[i:i+3]
-		if codon in SharpEcoliIndex:
+		if codon in SharpYeastIndex:
 			if codon not in ['ATG', 'TGG']:
-				cai_sum += math.log(SharpEcoliIndex[codon])
+				cai_sum += math.log(SharpYeastIndex[codon])
 				cai_length += 1
 		elif codon not in ['TGA', 'TAA', 'TAG']:
 			raise TypeError("illegal codon in sequences")
@@ -62,9 +86,9 @@ def calcul_caiRibo(sequence_string):
 	cai_sum, cai_length = 0,0
 	for i in range(0, len(sequence_string),3):
 		codon = sequence_string[i:i+3]
-		if codon in SharpEcoliIndex:
+		if codon in SharpYeastIndex:
 			if codon not in ['ATG', 'TGG']:
-				cai_sum += math.log(SharpEcoliIndex[codon])
+				cai_sum += math.log(SharpYeastIndex[codon])
 				cai_length += 1
 		elif codon not in ['TGA', 'TAA', 'TAG']:
 			raise TypeError("illegal codon in sequences")
@@ -133,6 +157,20 @@ def calculate_caiRibo(infilename):
 		#calculation cai
 		cai_row = calcul_cai(str(row[3]))
 		new_content += row[0] + "\t" + row[1] +"\t" +row[2] +"\t"+str(cai_row) +"\t"+row[3] +"\n"
+
+	write_out(outfile_name, new_content)
+	csv_file.close()
+
+#calculate cai from mapped result file, .sam format.
+def calculate_inSAM(infilename):
+	new_content = ""
+	# open file 
+	csv_file = open(infilename, "r")
+	# read file as csv file
+	for row in csv.reader(csv_file, delimiter="\t"):
+		#calculation cai
+		cai_row = calcul_cai(str(row[9]))
+		new_content += row[0] + "\t" + row[2] +"\t" +row[3] +"\t"+str(cai_row) +"\t"+row[9] +"\n"
 
 	write_out(outfile_name, new_content)
 	csv_file.close()
