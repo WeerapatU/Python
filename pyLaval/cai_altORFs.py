@@ -73,8 +73,8 @@ def calcul_cai(sequence_string):
 			if codon not in ['ATG', 'TGG']:
 				cai_sum += math.log(SharpYeastIndex[codon])
 				cai_length += 1
-		elif codon not in ['TGA', 'TAA', 'TAG']:
-			raise TypeError("illegal codon in sequences")
+		#elif codon not in ['TGA', 'TAA', 'TAG']:
+			#raise TypeError("illegal codon in sequences")
 
 	cai_value = math.exp(cai_sum / (cai_length - 1.0))
 	return cai_value
@@ -169,6 +169,7 @@ def calculate_inSAM(infilename):
 	# read file as csv file
 	for row in csv.reader(csv_file, delimiter="\t"):
 		#calculation cai
+		print row
 		cai_row = calcul_cai(str(row[9]))
 		new_content += row[0] + "\t" + row[2] +"\t" +row[3] +"\t"+str(cai_row) +"\t"+row[9] +"\n"
 
