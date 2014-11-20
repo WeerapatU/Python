@@ -169,7 +169,7 @@ def calculate_inSAM(infilename):
 	# read file as csv file
 	for row in csv.reader(csv_file, delimiter="\t"):
 		#calculation cai
-		print row
+		
 		cai_row = calcul_cai(str(row[9]))
 		new_content += row[0] + "\t" + row[2] +"\t" +row[3] +"\t"+str(cai_row) +"\t"+row[9] +"\n"
 
