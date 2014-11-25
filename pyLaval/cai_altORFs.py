@@ -176,6 +176,21 @@ def calculate_inSAM(infilename):
 	write_out(outfile_name, new_content)
 	csv_file.close()
 
+##for reads of ribosome profiling data, we do not know where is the start codon
+##	so, calculate 3 frame ofthe reads, and use average of 3 frame cai value as cai of read.
+def calculate_inReads(infilename):
+	new_content = ""
+	# open file
+	csv_file = open(infilename, "r")
+	# read file as csv file
+	for row in csv.reader(csv_file, delimiter="\t"):
+		cai_row = (calcul_cai(str(row[9][0:-1])) + calcul_cai(str(row[9][1:-1])) + calcul_cai(str(row[9][2:-1])) ) / 3
+		##to do 
+		new_content += row[0] + "\t" + row[2] +"\t" +row[3] +"\t"+str(cai_row) +"\t"+row[9] +"\n"
+	##write out the output
+	write_out(outfile_name, new_content)
+	csv_file.close()
+
 #write file out
 def write_out(filename, filecontent):
 	output = open(filename, "w")
@@ -202,4 +217,7 @@ outfile_name = "cai_" + outfile + ".csv"
 #calculate_caiRibo(infilename)
 
 ##calculate cai from mapped .sam file
-calculate_inSAM(infilename)
+#calculate_inSAM(infilename)
+
+##calculate cai from reads file
+calculate_inReads(infilename)
