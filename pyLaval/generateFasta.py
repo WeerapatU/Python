@@ -21,7 +21,7 @@ for row in csv.reader(infile, delimiter=","):
 
 	seq_name = ""
 	if row[1] == "+1":
-		seq_name = ">"+ row[0]+"_F_"+row[2] +"_"+row[3]
+		seq_name =  row[0]+"_F_"+row[2] +"_"+row[3]
 	else:
 		seq_name = ">"+ row[0]+"_R_"+row[2] +"_"+row[3]
 	dna_seq = row[5]
@@ -30,8 +30,8 @@ for row in csv.reader(infile, delimiter=","):
 	dna_seq_content += seq_name +"\n" + dna_seq+"\n"
 	protein_seq_content += seq_name +"\n" + protein_seq +"\n"
 	#write every sequence into individual file
-	write_out(("./dna_seq/"+row[0]+"_F_"+row[2] +"_"+row[3]+".fasta"), (seq_name +"\n" + dna_seq))
-	write_out(("./protein_seq/"+row[0]+"_F_"+row[2] +"_"+row[3]+".fasta"), (seq_name +"\n" + protein_seq))
+	write_out(("./dna_seq/"+seq_name+".fasta"), ((">"+seq_name) +"\n" + dna_seq))
+	write_out(("./protein_seq/"+seq_name +".fasta"), ((">"+seq_name) +"\n" + protein_seq))
 
 #write all sequences from sequence pool to file
 write_out("all_dna_altORFs.fasta", dna_seq_content)
