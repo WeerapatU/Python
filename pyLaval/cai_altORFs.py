@@ -1,7 +1,5 @@
 #!/usr/bin/python
 
-#!/usr/bin/python
-
 #calculate cai in altORFs
 
 import sys
@@ -9,6 +7,7 @@ import csv
 from Bio.SeqUtils import CodonUsage
 import math
 import os
+from Bio import SeqIO 
 
 #codon index for E.Coli
 SharpEcoliIndex = {
@@ -64,18 +63,35 @@ sequence_string = sequence_string.upper()
 
 # cai_sum, cai_length = 0,0
 
+def GC_count(sequence_string):
+	gc_count = 0
+	for i in range(0,len(sequence_string)):
+		if str(sequence_string[i]) == "G" or str(sequence_string[i]) == "C":
+			gc_count += 1
+	tmp_gc = (gc_count/float(len(sequence_string)))
+	return tmp_gc
+
+
 #calculate cai in sequence string, return cai value
 def calcul_cai(sequence_string):
 	cai_sum, cai_length = 0,0
 	for i in range(0, len(sequence_string),3):
 		codon = sequence_string[i:i+3]
-		if codon in SharpYeastIndex:
-			if codon not in ['ATG', 'TGG']:
-				cai_sum += math.log(SharpYeastIndex[codon])
-				cai_length += 1
+		# print codon
+
+		#print SharpYeastIndex[str(codon)]
+		# cai_sum += math.log(SharpYeastIndex[str(codon)])
+		# cai_length += 1
+		if str(codon) in SharpYeastIndex:
+			cai_sum += math.log(SharpYeastIndex[str(codon)])
+			cai_length += 1
+			# if codon not in ['ATG', 'TGG']:
+			# 	cai_sum += math.log(SharpYeastIndex[codon])
+			# 	cai_length += 1
+			# 	print "hello"
 		#elif codon not in ['TGA', 'TAA', 'TAG']:
 			#raise TypeError("illegal codon in sequences")
-
+	#print str(cai_sum) +"---"+str(cai_length)
 	cai_value = math.exp(cai_sum / (cai_length - 1.0))
 	return cai_value
 
@@ -191,6 +207,45 @@ def calculate_inReads(infilename):
 	write_out(outfile_name, new_content)
 	csv_file.close()
 
+#calculate cai on single fasta file
+#@infilename	input fasta file name
+#@return 	sequence length and cai based on this sequence  
+def calcuate_onFasta(infilename):
+	fasta_file = open(infilename, "r")
+	for seqrecord in SeqIO.parse(fasta_file,"fasta"):
+		seq_cai = calcul_cai(seqrecord.seq)
+		seq_len = len(seqrecord.seq)
+		gc_count = GC_count(seqrecord.seq)
+		return [seq_len, seq_cai,gc_count]
+	fasta_file.close()
+
+def calcuate_onMultiFasta(infilename):
+	fasta_file = open(infilename, "r")
+	filecontent = ""
+	for seqrecord in SeqIO.parse(fasta_file,"fasta"):
+		seq_cai = calcul_cai(seqrecord.seq)
+		seq_len = len(seqrecord.seq)
+		gc_count = GC_count(seqrecord.seq)
+		filecontent += str(seqrecord.id) +"," + str(gc_count)+ "," + str(seq_cai) + "\n"
+	write_out("cai_orf.csv",filecontent)
+	fasta_file.close()
+
+#give a fasta file name list, calculate cai on every fasta sequence file.
+#@infilename	input file list text file.
+#@
+def calculate_fastaFiles(infilename):
+	out_content = ""
+	#infilename is the file of fasta sequences list
+	infile = open(infilename ,"r")
+	for line in infile:
+		fasta_filename = line[0:-1]
+		seq_len, seq_cai, gc_count = calcuate_onFasta(fasta_filename)
+		out_content += str(seq_len/3) +"," + str(gc_count)+ "," + str(seq_cai) + "\n"
+
+	write_out("cai_on_fasta.csv", out_content)
+	infile.close()
+
+
 #write file out
 def write_out(filename, filecontent):
 	output = open(filename, "w")
@@ -220,4 +275,10 @@ outfile_name = "cai_" + outfile + ".csv"
 #calculate_inSAM(infilename)
 
 ##calculate cai from reads file
-calculate_inReads(infilename)
+#calculate_inReads(infilename)
+
+##calculate cai on a list of fasta files
+#calculate_fastaFiles(infilename)
+
+##
+calcuate_onMultiFasta(infilename)

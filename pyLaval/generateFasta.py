@@ -23,7 +23,7 @@ for row in csv.reader(infile, delimiter=","):
 	if row[1] == "+1":
 		seq_name =  row[0]+"_F_"+row[2] +"_"+row[3]
 	else:
-		seq_name = ">"+ row[0]+"_R_"+row[2] +"_"+row[3]
+		seq_name = row[0]+"_R_"+row[2] +"_"+row[3]
 	dna_seq = row[5]
 	protein_seq = row[7]
 	#add sequence to sequence pool
