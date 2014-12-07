@@ -2,6 +2,7 @@
 
 import sys
 from Bio import SeqIO
+import numpy
 
 def trim_adaptors(records, adaptor):
 
@@ -23,10 +24,19 @@ def trim_amubiguousN(records):
         else:
             yield record[index:]
 
+def get_quality(records):
+    for record in records:
+        #print len(record.letter_annotations["phred_quality"])
+        tmp = numpy.mean(record.letter_annotations["phred_quality"])
+        tmplist.extend(tmp)
 
 infileneme = sys.argv[1]
 original_reads = SeqIO.parse(infileneme, "fastq")
 ##trimmed_reads = trim_adaptors(original_reads, "GATGACGGTGT")
-trimed_reads = trim_amubiguousN(original_reads)
-count = SeqIO.write(trimmed_reads, "trimmed.fastq", "fastq") 
-print("Saved %i reads" % count)
+tmplist =[]
+get_quality(original_reads)
+print min(tmplist)
+print max(tmplist)
+#trimmed_reads = trim_amubiguousN(original_reads)
+#SeqIO.write(trimmed_reads, "trimmed.fastq", "fastq") 
+#print("Saved %i reads" % count)
