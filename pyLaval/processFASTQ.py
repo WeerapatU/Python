@@ -27,6 +27,6 @@ def trim_amubiguousN(records):
 infileneme = sys.argv[1]
 original_reads = SeqIO.parse(infileneme, "fastq")
 ##trimmed_reads = trim_adaptors(original_reads, "GATGACGGTGT")
-trimed_reads = trim_amubiguousN(original_reads)
-count = SeqIO.write(trimmed_reads, "trimmed.fastq", "fastq") 
-print("Saved %i reads" % count)
+trimmed_reads = trim_amubiguousN(original_reads)
+SeqIO.write(trimmed_reads, "trimmed.fastq", "fastq") 
+#print("Saved %i reads" % count)
