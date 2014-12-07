@@ -33,6 +33,7 @@ def get_quality(records):
 infileneme = sys.argv[1]
 original_reads = SeqIO.parse(infileneme, "fastq")
 ##trimmed_reads = trim_adaptors(original_reads, "GATGACGGTGT")
+<<<<<<< HEAD
 tmplist =[]
 get_quality(original_reads)
 print min(tmplist)
@@ -40,3 +41,8 @@ print max(tmplist)
 #trimmed_reads = trim_amubiguousN(original_reads)
 #SeqIO.write(trimmed_reads, "trimmed.fastq", "fastq") 
 #print("Saved %i reads" % count)
+=======
+trimmed_reads = trim_amubiguousN(original_reads)
+SeqIO.write(trimmed_reads, "trimmed.fastq", "fastq") 
+#print("Saved %i reads" % count)
+>>>>>>> 1657186ddca9213e5fdbc23dd7d49564921f0bc3
