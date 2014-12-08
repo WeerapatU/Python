@@ -48,45 +48,52 @@ def get_position_from_sam(infile):
 
 def combine_to_orf(mapped_reads, orf_list):
 	for line in mapped_reads:
+		
 		line_group = line.split(",")
+		#print len(orf_list)
 		for i in range(len(orf_list)):
 			#orf_list[i]
 		#for item in orf_list: 
+
+			# print line_group[1] + " ====== " + orf_list[i][1]
+			# print orf_list[i]
+
 			if line_group[1] in orf_list[i]:
+
 				chro_mapped = line_group[1]
 				chro_orf = orf_list[i][0]
 				
 				strand_mapped = line_group[0]
 				strand_orf = orf_list[i][1]
+				# print strand_mapped
+				# print strand_orf
 
-				start_mapped = line_group[2]
-				start_orf = orf_list[i][2]
-				end_orf = orf_list[i][3]
-				len_mapped = line_group[4]
+				start_mapped = int(line_group[2])
+				start_orf = int(orf_list[i][2])
+				end_orf = int(orf_list[i][3])
+				len_mapped = int(line_group[4])
 				
 				##both in +1 strand
-				if strand_mapped == "16" and "F" in strand_orf:
-					# print start_mapped
-					# print start_orf
-					# print start_mapped
-					# print end_orf
-					#orf_list[i][4] = 558
-					#print "hello1"
-					#print orf_list[i][4]
+				
+				if strand_mapped == "16" and strand_orf == "F" :
+					# print "landry"
+					# print (start_mapped)
+					# print (start_orf)
+					# print start_mapped >= start_orf
 					if start_mapped >= start_orf and start_mapped <= end_orf:
-						#print "hello2"
+						# print "hello2"
 						distance_in_mapped_orf = (end_orf - start_mapped)
 						if distance_in_mapped_orf >= len_mapped:
 							orf_list[i][4] += len_mapped
-							#print orf_list[i][4] 
+							print orf_list[i][4] 
 						else :
 							orf_list[i][4] +=  distance_in_mapped_orf
 							#print orf_list[i][4] 
 
 				## mapped in +1 strand, orf in -1 strand 
-				elif strand_mapped == "16" and "R" in strand_orf:
-					if start_mapped >= end_orf and start_mapped <= start_orf:
-						distance_in_mapped_orf = start_orf - strand_mapped
+				elif strand_mapped == "16" and strand_orf == "R"  :
+					if start_mapped <= end_orf and start_mapped >= start_orf:
+						distance_in_mapped_orf = end_orf - start_mapped
 						if distance_in_mapped_orf >= len_mapped:
 							orf_list[i][4] += len_mapped
 							#print orf_list[i][4] 
@@ -95,9 +102,9 @@ def combine_to_orf(mapped_reads, orf_list):
 							#print orf_list[i][4] 
 
 				##mapped in -1 strand, and orf in +1 strand
-				elif strand_mapped == "0" and "F" in strand_orf:
-					if start_mapped <= end_orf and strand_mapped >= start_orf:
-						distance_in_mapped_orf = strand_mapped - start_orf 
+				elif strand_mapped == "0" and strand_orf == "F"  :
+					if start_mapped <= end_orf and start_mapped >= start_orf:
+						distance_in_mapped_orf = start_mapped - start_orf 
 						if distance_in_mapped_orf >=len_mapped:
 							orf_list[i][4] += len_mapped
 							#print orf_list[i][4] 
@@ -105,7 +112,7 @@ def combine_to_orf(mapped_reads, orf_list):
 							orf_list[i][4] += distance_in_mapped_orf
 							#print orf_list[i][4] 
 				##both in _1 strand
-				elif strand_mapped == "0" and "R" in strand_orf:
+				elif strand_mapped == "0" and strand_orf == "R"  :
 					if start_mapped >= end_orf and start_mapped <= start_orf:
 						distance_in_mapped_orf = start_mapped - end_orf
 						if distance_in_mapped_orf >= len_mapped:
@@ -117,7 +124,7 @@ def combine_to_orf(mapped_reads, orf_list):
 				else:
 					print "no hits"
 
-			print orf_list[i][4]
+			# print orf_list[i][4]
 	return orf_list
 			
 
@@ -133,7 +140,7 @@ def orf_info_list(orf_infile):
 		else:
 			tmp_list = [chroso_name,"R", start_p, end_p, 0,line_group[0]]
 			orf_list.append(tmp_list)
-		
+	
 	return orf_list
 
 #write file out
@@ -155,12 +162,12 @@ def list_to_string(list_list):
 # infilename = sys.argv[1]
 # infile = open(infilename,"r")
 # sam_position = get_position_from_sam(infile)
-# write_out("mapped_info.csv", sam_position)
+# write_out("mapped_sam_info.csv", sam_position)
 # infile.close()
 
 ##find position
-orf_list = orf_info_list(open(sys.argv[1]))
-orf_list1 =  combine_to_orf(open(sys.argv[2]), orf_list)
+orf_in_list = orf_info_list(open(sys.argv[1]))
+orf_list1 =  combine_to_orf(open(sys.argv[2]), orf_in_list)
 write_out("mapped_orf_position.csv", list_to_string(orf_list1))
 
 
